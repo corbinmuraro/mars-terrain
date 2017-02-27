@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Terrain Testing</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+<div class="loader-container">
+    <div class="loader">
+        <div class="loader-header"></div>
+        <div class="bar">
+            <div class="inner-bar"></div>
+        </div>
+	</div>
+</div>
+
+<div class="display-container">
+	<div class="overlay-container">
+		<div class="left-overlay">
+			<span class="overlay-header">Sand Dunes in Olympia Undae</span>
+			<div></div>
+			<span class="overlay-coordinates">81.64° N 178.9° E</span>
+		</div>
+		
+		<div id="next">Next</div>
+	</div>
+
+	<div id="webgl"></div>
+</div>
+
+<!-- skybox shaders -->
+<script type="x-shader/x-vertex" id="sky-vertex">
+	varying vec3 vWorldPosition;
+	void main() {
+	vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
+	vWorldPosition = worldPosition.xyz;
+	gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+	}
+</script>
+<script type="x-shader/x-fragment" id="sky-fragment">
+	uniform vec3 topColor;
+	uniform vec3 bottomColor;
+	uniform float offset;
+	uniform float exponent;
+	varying vec3 vWorldPosition;
+	void main() {
+	float h = normalize( vWorldPosition + offset ).y;
+	gl_FragColor = vec4( mix( bottomColor, topColor, max( pow( h, exponent ), 0.0 ) ), 1.0 );
+	}
+</script>
+<!-- /skybox shaders -->
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="js/three.min.js"></script>
+<script src="js/TerrainLoader.js"></script>
+<script src="js/decode.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
