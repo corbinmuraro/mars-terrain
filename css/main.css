@@ -80,6 +80,7 @@ html, body { margin: 0; overflow: hidden; height: 100%; }
     right: 0;
     top: 0;
     color: #fff;
+    opacity: 0.5;
     font-family: 'BebasNeue', Helvetica, sans-serif;
     border-bottom: 2px solid white;
     cursor: pointer;

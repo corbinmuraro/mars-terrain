@@ -1,27 +1,63 @@
 $(document).ready(function() {
     var locations = [];
     var active;
-	
-    $('#next').click(function() {
+
+    $('#next').click(function(e) {
+        $("#next").css('opacity', 0.5);
+
         if (active == locations[0]) {
             $('.overlay-header').text('Buttes and Mesas Near Cerberus Fossae');
 
             $('.overlay-coordinates').text('7.8° N 149.3° E');
-            scene.remove(locations[0]);
+            scene.remove(active);
             scene.add(locations[1]);
             active = locations[1];
             decode($('.overlay-coordinates'),'overlay-coordinates');
             decode($('.overlay-header'),'overlay-header');
+            setTimeout(function() {
+                $("#next").delay(1000).animate({
+                    opacity: 1
+                }, {
+                    duration: 1000,
+                    queue: false
+                });
+            }, 1000);
+        }
+
+        else if (active == locations[1]) {
+            $('.overlay-header').text('Fault Lines in Candor Chasma');
+            $('.overlay-coordinates').text('-6.68° N 284.2° E');
+            scene.remove(active);
+            scene.add(locations[2]);
+            active = locations[2];
+            decode($('.overlay-coordinates'),'overlay-coordinates');
+            decode($('.overlay-header'),'overlay-header');
+            setTimeout(function() {
+                $("#next").delay(1000).animate({
+                    opacity: 1
+                }, {
+                    duration: 1000,
+                    queue: false
+                });
+            }, 1000);        
         }
 
         else {
             $('.overlay-header').text('Sand Dunes in Olympia Undae');
             $('.overlay-coordinates').text('81.64° N 178.9° E');
-            scene.remove(locations[1]);
+            scene.remove(active);
             scene.add(locations[0]);
             active = locations[0];
             decode($('.overlay-coordinates'),'overlay-coordinates');
             decode($('.overlay-header'),'overlay-header');
+            setTimeout(function() {
+                $("#next").delay(1000).animate({
+                    opacity: 1
+                }, {
+                    duration: 1000,
+                    queue: false
+                });
+            }, 1000);
         }
     });
 
@@ -45,6 +81,15 @@ $(document).ready(function() {
     	$('.loader-container').fadeOut('slow');
     	decode($('.overlay-coordinates'),'overlay-coordinates');
     	decode($('.overlay-header'),'overlay-header');
+
+        setTimeout(function() {
+            $("#next").delay(1000).animate({
+                opacity: 1
+            }, {
+                duration: 1000,
+                queue: false
+            });
+        }, 1000);
 
 	};
 
@@ -134,6 +179,20 @@ $(document).ready(function() {
         locations.push(plane);
     });
 
+    terrainLoader.load('terrain/F.bin', function(data) {
+        var geometry = new THREE.PlaneGeometry(60, 60, 499, 499);
+        for (var i = 0, l = geometry.vertices.length; i < l; i++) {
+            geometry.vertices[i].z = data[i]/ 65535 * 5;        
+        }
+
+        var material = new THREE.MeshPhongMaterial({
+            map: THREE.ImageUtils.loadTexture('terrain/F_brown.jpg')
+        });
+
+        plane = new THREE.Mesh(geometry, material);
+        plane.position.set(0,0,0);
+        locations.push(plane);
+    });
 
     // RENDER THE SCENE
 
