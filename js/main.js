@@ -6,9 +6,9 @@ $(document).ready(function() {
         $("#next").css('opacity', 0.5);
 
         if (active == locations[0]) {
-            $('.overlay-header').text('Buttes and Mesas Near Cerberus Fossae');
+            $('.overlay-header').text('Sand Dunes in Olympia Undae');
 
-            $('.overlay-coordinates').text('7.8° N 149.3° E');
+            $('.overlay-coordinates').text('81.64° N 178.9° E');
             scene.remove(active);
             scene.add(locations[1]);
             active = locations[1];
@@ -43,8 +43,8 @@ $(document).ready(function() {
         }
 
         else {
-            $('.overlay-header').text('Sand Dunes in Olympia Undae');
-            $('.overlay-coordinates').text('81.64° N 178.9° E');
+            $('.overlay-header').text('Buttes and Mesas Near Cerberus Fossae');
+            $('.overlay-coordinates').text('7.8° N 149.3° E');
             scene.remove(active);
             scene.add(locations[0]);
             active = locations[0];
