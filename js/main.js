@@ -5,13 +5,12 @@ $(document).ready(function() {
     $('#next').click(function(e) {
         $("#next").css('opacity', 0.5);
 
-        if (active == locations[0]) {
-            $('.overlay-header').text('Sand Dunes in Olympia Undae');
-
-            $('.overlay-coordinates').text('81.64° N 178.9° E');
-            scene.remove(active);
+        if (active === 0) {
+            scene.remove(locations[active]);
             scene.add(locations[1]);
-            active = locations[1];
+            active = 1;
+            $('.overlay-header').text('Sand Dunes in Olympia Undae');
+            $('.overlay-coordinates').text('81.64° N 178.9° E');
             decode($('.overlay-coordinates'),'overlay-coordinates');
             decode($('.overlay-header'),'overlay-header');
             setTimeout(function() {
@@ -24,12 +23,12 @@ $(document).ready(function() {
             }, 1000);
         }
 
-        else if (active == locations[1]) {
+        else if (active == 1) {
+            scene.remove(locations[active]);
+            scene.add(locations[2]);
+            active = 2;
             $('.overlay-header').text('Fault Lines in Candor Chasma');
             $('.overlay-coordinates').text('-6.68° N 284.2° E');
-            scene.remove(active);
-            scene.add(locations[2]);
-            active = locations[2];
             decode($('.overlay-coordinates'),'overlay-coordinates');
             decode($('.overlay-header'),'overlay-header');
             setTimeout(function() {
@@ -42,12 +41,12 @@ $(document).ready(function() {
             }, 1000);        
         }
 
-        else {
+        else  if (active == 2) {
+            scene.remove(locations[active]);
+            scene.add(locations[0]);
+            active = 0;
             $('.overlay-header').text('Buttes and Mesas Near Cerberus Fossae');
             $('.overlay-coordinates').text('7.8° N 149.3° E');
-            scene.remove(active);
-            scene.add(locations[0]);
-            active = locations[0];
             decode($('.overlay-coordinates'),'overlay-coordinates');
             decode($('.overlay-header'),'overlay-header');
             setTimeout(function() {
@@ -79,6 +78,8 @@ $(document).ready(function() {
 
 	    $('.inner-bar').css('width', '100%');
     	$('.loader-container').fadeOut('slow');
+        $('.overlay-header').text('Buttes and Mesas Near Cerberus Fossae');
+        $('.overlay-coordinates').text('7.8° N 149.3° E');
     	decode($('.overlay-coordinates'),'overlay-coordinates');
     	decode($('.overlay-header'),'overlay-header');
 
@@ -147,27 +148,11 @@ $(document).ready(function() {
     renderer.setClearColor( 0xffffff, 0);
     renderer.setSize(width, height);
     var terrainLoader = new THREE.TerrainLoader();
-    terrainLoader.load('terrain/E.bin', function(data) {
-        var geometry = new THREE.PlaneGeometry(60, 60, 499, 499);
-        for (var i = 0, l = geometry.vertices.length; i < l; i++) {
-            geometry.vertices[i].z = data[i]/ 65535 * 5;        
-        }
-
-        var material = new THREE.MeshPhongMaterial({
-            map: THREE.ImageUtils.loadTexture('terrain/E_brown.jpg')
-        });
-
-        plane = new THREE.Mesh(geometry, material);
-        plane.position.set(0,0,0);
-        locations.push(plane);
-        scene.add(locations[0]);
-        active = locations[0];
-    });
 
     terrainLoader.load('terrain/A.bin', function(data) {
         var geometry = new THREE.PlaneGeometry(60, 60, 499, 499);
         for (var i = 0, l = geometry.vertices.length; i < l; i++) {
-            geometry.vertices[i].z = data[i]/ 65535 * 5;        
+            geometry.vertices[i].z = data[i]/ 65535 * 3;        
         }
 
         var material = new THREE.MeshPhongMaterial({
@@ -177,22 +162,41 @@ $(document).ready(function() {
         plane = new THREE.Mesh(geometry, material);
         plane.position.set(0,0,0);
         locations.push(plane);
+        scene.add(plane);
+        active = 0;
     });
 
-    terrainLoader.load('terrain/F.bin', function(data) {
+    terrainLoader.load('terrain/B.bin', function(data) {
         var geometry = new THREE.PlaneGeometry(60, 60, 499, 499);
         for (var i = 0, l = geometry.vertices.length; i < l; i++) {
-            geometry.vertices[i].z = data[i]/ 65535 * 5;        
+            geometry.vertices[i].z = data[i]/ 65535 * 3;        
         }
 
         var material = new THREE.MeshPhongMaterial({
-            map: THREE.ImageUtils.loadTexture('terrain/F_brown.jpg')
+            map: THREE.ImageUtils.loadTexture('terrain/B_brown.jpg')
         });
 
         plane = new THREE.Mesh(geometry, material);
         plane.position.set(0,0,0);
         locations.push(plane);
     });
+
+    terrainLoader.load('terrain/C.bin', function(data) {
+        var geometry = new THREE.PlaneGeometry(60, 60, 499, 499);
+        for (var i = 0, l = geometry.vertices.length; i < l; i++) {
+            geometry.vertices[i].z = data[i]/ 65535 * 5;        
+        }
+
+        var material = new THREE.MeshPhongMaterial({
+            map: THREE.ImageUtils.loadTexture('terrain/C_brown.jpg')
+        });
+
+        plane = new THREE.Mesh(geometry, material);
+        plane.position.set(0,0,0);
+        locations.push(plane);
+    });
+
+    
 
     // RENDER THE SCENE
 
@@ -201,7 +205,7 @@ $(document).ready(function() {
     render();
     function render() {
         requestAnimationFrame(render);
-        active.rotation.z += 0.001;
+        locations[active].rotation.z += 0.001;
         renderer.render(scene, camera);
     }
 
